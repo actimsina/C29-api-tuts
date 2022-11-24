@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const logger = require('./logger')
+const booksRouter = require('./routes/books-routes')
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
 
+app.use('/books', booksRouter)
 // Error handling middleware
 
 app.use((err, req, res, next) => {
