@@ -7,18 +7,8 @@ const booksRouter = require('./routes/books-routes')
 
 const port = process.env.PORT || 3000
 
-// const connectDB = async () => {
-//     try {
-//         await mongoose.connect(process.env.DB_URI)
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
-
-// connectDB().then()
-
 mongoose.connect(process.env.DB_URI).then(() => {
-    console.log('DB Connection successful')
+    console.log('Connected to MongoDB')
 }).catch((err) => console.log(err))
 
 const app = express()
@@ -42,7 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 app.get('^/$|/index(.html)?', (req, res) => {
-    // res.send('Hello world!')
     res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
 
@@ -55,7 +44,6 @@ app.use((err, req, res, next) => {
 })
 
 mongoose.connection.once('open', () => {
-    console.log('Connected to MongoDB')
     app.listen(port, () => {
         console.log(`Server is running at port ${port}`)
     })
