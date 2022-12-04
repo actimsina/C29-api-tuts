@@ -1,46 +1,54 @@
 const express = require('express')
 const router = express.Router()
-const books = require('../data/books')
+// const books = require('../data/books')
+const Book = require('../models/Book')
 
 router.route('/')
-    .get((req, res) => {
-        res.json(books)
+    .get((req, res, next) => {
+        Book.find()
+            .then((books) => {
+                res.json(books)
+            }).catch(next)
     })
-    .post((req, res) => {
-        let temp_book = {
-            'id': books[books.length -1 ].id + 1,
-            'title': req.body.title,
-            'author': req.body.author
-        }
-        books.push(temp_book)
-        res.status(201).send(temp_book)
+    .post((req, res, next) => {
+        let book = { 'title': req.body.title, 'author': req.body.author }
+        Book.create(req.body)
+            .then((b) => {
+                res.status(201).json(b)
+            }).catch(next)
     })
-    .put((req, res)=> {
-        res.status(501).send()
+    .put((req, res) => {
+        res.status(501).send({ 'msg': 'Not implemented' })
     })
-    .delete((req, res) => {
-        res.send('Delete all books')
+    .delete((req, res, next) => {
+        Book.deleteMany()
+            .then((status) => {
+                res.json(status)
+            }).catch(next)
     })
 
 router.route('/:id')
-    .get((req, res) => {
+    .get((req, res, next) => {
         console.log(req.params.id)
-        let the_book = books.find((book) => book.id == req.params.id)
-        res.send(the_book)
+        Book.findById(req.params.id)
+            .then((book) => {
+                res.json(book)
+            }).catch(next)
     })
-    .put((req, res) => {
-        let updated = books.map((book) => {
-            if(book.id == req.params.id) {
-                book.title = req.body.title,
-                book.author = req.body.author
-            }
-            return book
-        })
-       res.json(updated)
+    .post((req, res, next) => {
+        res.status(501).json({ 'msg': 'Not implemented' })
     })
-    .delete((req, res) => {
-        let remaining = books.filter((book) => book.id != req.params.id)
-        res.json(remaining)
+    .put((req, res, next) => {
+        Book.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+            .then((book) => {
+                res.json(book)
+            }).catch(next)
+    })
+    .delete((req, res, next) => {
+        Book.findByIdAndDelete(req.params.id)
+            .then((book) => {
+                res.json(book)
+            }).catch(next)
     })
 
 module.exports = router

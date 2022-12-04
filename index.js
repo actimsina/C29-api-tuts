@@ -1,7 +1,25 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
+const mongoose = require('mongoose')
 const logger = require('./logger')
 const booksRouter = require('./routes/books-routes')
+
+const port = process.env.PORT || 3000
+
+// const connectDB = async () => {
+//     try {
+//         await mongoose.connect(process.env.DB_URI)
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
+
+// connectDB().then()
+
+mongoose.connect(process.env.DB_URI).then(() => {
+    console.log('DB Connection successful')
+}).catch((err) => console.log(err))
 
 const app = express()
 
@@ -10,6 +28,7 @@ app.use((req, res, next) => {
     console.log(`${req.method} ${req.path}`)
     next()
 })
+
 
 // To accept form data
 app.use(express.urlencoded({ extended: false }))
@@ -32,9 +51,12 @@ app.use('/books', booksRouter)
 
 app.use((err, req, res, next) => {
     console.log(err.stack)
-    res.status(500).send(err.message)
+    res.status(500).json({ 'err': err.message })
 })
 
-app.listen(3000, () => {
-    console.log('Server is running at port 3000')
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB')
+    app.listen(port, () => {
+        console.log(`Server is running at port ${port}`)
+    })
 })
