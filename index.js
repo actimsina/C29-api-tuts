@@ -40,7 +40,7 @@ app.use('/books', booksRouter)
 
 app.use((err, req, res, next) => {
     console.log(err.stack)
-    res.status(500).json({ 'err': err.message })
+    res.status(500).json({ 'msg': err.message })
 })
 
 mongoose.connection.once('open', () => {

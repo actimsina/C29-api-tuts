@@ -23,22 +23,21 @@ const deleteAllBooks = (req, res, next) => {
 }
 
 const getBookById = (req, res, next) => {
-    console.log(req.params.id)
-    Book.findById(req.params.id)
+    Book.findById(req.params.book_id)
         .then((book) => {
             res.json(book)
         }).catch(next)
 }
 
 const updateBookById = (req, res, next) => {
-    Book.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+    Book.findByIdAndUpdate(req.params.book_id, { $set: req.body }, { new: true })
         .then((book) => {
             res.json(book)
         }).catch(next)
 }
 
 const deleteBookById = (req, res, next) => {
-    Book.findByIdAndDelete(req.params.id)
+    Book.findByIdAndDelete(req.params.book_id)
         .then((book) => {
             res.json(book)
         }).catch(next)
