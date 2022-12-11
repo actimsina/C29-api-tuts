@@ -4,6 +4,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const logger = require('./logger')
 const booksRouter = require('./routes/books-routes')
+const categoryRouter = require('./routes/category-routes')
 
 const port = process.env.PORT || 3000
 
@@ -36,6 +37,7 @@ app.get('^/$|/index(.html)?', (req, res) => {
 })
 
 app.use('/books', booksRouter)
+app.use('/categories', categoryRouter)
 // Error handling middleware
 
 app.use((err, req, res, next) => {

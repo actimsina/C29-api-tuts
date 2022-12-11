@@ -1,5 +1,11 @@
 const Book = require('../models/Book')
 
+// const links = [
+//     { rel: 'self', method: 'get', href: '/books' },
+//     { rel: 'create', method: 'post', href: '/books' },
+//     { rel: 'delete', method: 'delete', href: '/books' }
+// ]
+
 const getAllBooks = (req, res, next) => {
     Book.find()
         .then((books) => {
@@ -10,8 +16,8 @@ const getAllBooks = (req, res, next) => {
 const createBook = (req, res, next) => {
     // let book = { 'title': req.body.title, 'author': req.body.author }
     Book.create(req.body)
-        .then((b) => {
-            res.status(201).json(b)
+        .then((book) => {
+            res.status(201).json(book)
         }).catch(next)
 }
 
@@ -24,6 +30,7 @@ const deleteAllBooks = (req, res, next) => {
 
 const getBookById = (req, res, next) => {
     Book.findById(req.params.book_id)
+        .populate('category')
         .then((book) => {
             res.json(book)
         }).catch(next)
