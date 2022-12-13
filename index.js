@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const logger = require('./logger')
 const booksRouter = require('./routes/books-routes')
 const categoryRouter = require('./routes/category-routes')
+const userRouter = require('./routes/users-routes')
+const auth = require('./middleware/auth')
 
 const port = process.env.PORT || 3000
 
@@ -36,13 +38,16 @@ app.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
 
+app.use('/users', userRouter)
+app.use(auth.verifyUser)
 app.use('/books', booksRouter)
 app.use('/categories', categoryRouter)
 // Error handling middleware
 
 app.use((err, req, res, next) => {
     console.log(err.stack)
-    res.status(500).json({ 'msg': err.message })
+    if (res.statusCode == 200) res.status(500)
+    res.json({ msg: err.message })
 })
 
 mongoose.connection.once('open', () => {

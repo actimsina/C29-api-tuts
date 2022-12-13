@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bookController = require('../controllers/book-controller')
 const reviewController = require('../controllers/review-controller')
+const { verifyUser, verifyAdmin } = require('../middleware/auth')
 // const books = require('../data/books')
 
 
@@ -9,7 +10,7 @@ router.route('/')
     .get(bookController.getAllBooks)
     .post(bookController.createBook)
     .put((req, res) => res.status(501).json({ 'msg': 'Not implemented' }))
-    .delete(bookController.deleteAllBooks)
+    .delete(verifyAdmin, bookController.deleteAllBooks)
 
 router.route('/:book_id')
     .get(bookController.getBookById)
