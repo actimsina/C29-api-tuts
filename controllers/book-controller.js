@@ -1,11 +1,5 @@
 const Book = require('../models/Book')
 
-// const links = [
-//     { rel: 'self', method: 'get', href: '/books' },
-//     { rel: 'create', method: 'post', href: '/books' },
-//     { rel: 'delete', method: 'delete', href: '/books' }
-// ]
-
 const getAllBooks = (req, res, next) => {
     Book.find()
         .then((books) => {
@@ -14,8 +8,12 @@ const getAllBooks = (req, res, next) => {
 }
 
 const createBook = (req, res, next) => {
-    // let book = { 'title': req.body.title, 'author': req.body.author }
-    Book.create(req.body)
+    let book = {
+        title: req.body.title,
+        author: req.body.author,
+        owner: req.user.id
+    }
+    Book.create(book)
         .then((book) => {
             res.status(201).json(book)
         }).catch(next)
@@ -37,10 +35,22 @@ const getBookById = (req, res, next) => {
 }
 
 const updateBookById = (req, res, next) => {
-    Book.findByIdAndUpdate(req.params.book_id, { $set: req.body }, { new: true })
-        .then((book) => {
-            res.json(book)
+    Book.findById(req.params.book_id)
+        .then(book => {
+            if (book.owner != req.user.id) {
+                res.status(403)
+                return next(new Error('Not allowed'))
+            }
+            book.author = req.body.author ? req.body.author : book.author
+            book.title = req.body.title ? req.body.title : book.title
+            book.category = req.body.category ? req.body.category : book.category
+            book.save().then(book => res.json(book)).catch(next)
         }).catch(next)
+
+    // Book.findByIdAndUpdate(req.params.book_id, { $set: req.body }, { new: true })
+    //     .then((book) => {
+    //         res.json(book)
+    //     }).catch(next)
 }
 
 const deleteBookById = (req, res, next) => {

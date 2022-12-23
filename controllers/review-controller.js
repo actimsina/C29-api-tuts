@@ -8,10 +8,14 @@ const getAllReviews = (req, res, next) => {
 }
 
 const createReview = (req, res, next) => {
+    data = {
+        body: req.body.body,
+        reviewer: req.user.id
+    }
     Book.findById(req.params.book_id)
         .then((book) => {
-            book.reviews.push(req.body)
-            book.save().then(book => res.status(201).json(book.reviews))
+            book.reviews.push(data)
+            book.save().then(book => res.status(201).json(book.reviews)).catch(next)
         }).catch(next)
 }
 
@@ -35,20 +39,34 @@ const getReviewById = (req, res, next) => {
 const updateReviewById = (req, res, next) => {
     Book.findById(req.params.book_id)
         .then((book) => {
-            let review = book.reviews.find(review => review.id === req.params.review_id)
-            if (review) {
-                review.body = req.body.body
-                book.save().then(book => res.json(book.reviews))
+            let review = book.reviews.id(req.params.review_id)
+            if (review == null) {
+                res.status(404)
+                return next(new Error('Not found'))
             }
-            else res.json({ 'msg': 'Respective review not found' })
+            if (review.reviewer != req.user.id) {
+                res.status(403)
+                return next(new Error('Not authorized'))
+            }
+            review.body = req.body.body
+            book.save().then(book => res.json(book.reviews)).catch(next)
         }).catch(next)
 }
 
 const deleteReviewById = (req, res, next) => {
     Book.findById(req.params.book_id)
         .then((book) => {
+            let review = book.reviews.id(req.params.review_id)
+            if (review == null) {
+                res.status(404)
+                return next(new Error('Not found'))
+            }
+            if (review.reviewer != req.user.id) {
+                res.status(403)
+                return next(new Error('Not authorized'))
+            }
             book.reviews = book.reviews.filter(review => review.id !== req.params.review_id)
-            book.save().then(book => res.json(book.reviews))
+            book.save().then(book => res.json(book.reviews)).catch(next)
         }).catch(next)
 }
 module.exports = {

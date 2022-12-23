@@ -35,7 +35,7 @@ router.post('/login', (req, res, next) => {
         .then(user => {
             if (user == null) {
                 res.status(401)
-                return next(new Error(`Username ${req.body.username} does not exist.`))
+                return next(new Error(`User ${req.body.username} has not registered.`))
             }
             bcrypt.compare(req.body.password, user.password, (err, status) => {
                 if (err) return next(err)
@@ -52,7 +52,7 @@ router.post('/login', (req, res, next) => {
                     process.env.SECRET, { expiresIn: '1h' })
                 res.json({ status: 'Login Success', token: token })
             })
-        })
+        }).catch(next)
 })
 
 

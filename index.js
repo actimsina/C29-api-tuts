@@ -21,18 +21,12 @@ app.use((req, res, next) => {
     console.log(`${req.method} ${req.path}`)
     next()
 })
-
-
 // To accept form data
 app.use(express.urlencoded({ extended: false }))
-
 // To accept json data
 app.use(express.json())
-
 // To serve static files
 app.use(express.static(path.join(__dirname, 'public')))
-
-
 
 app.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'))
@@ -43,7 +37,6 @@ app.use(auth.verifyUser)
 app.use('/books', booksRouter)
 app.use('/categories', categoryRouter)
 // Error handling middleware
-
 app.use((err, req, res, next) => {
     console.log(err.stack)
     if (res.statusCode == 200) res.status(500)

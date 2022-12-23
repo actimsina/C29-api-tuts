@@ -16,13 +16,20 @@ const verifyUser = (req, res, next) => {
 }
 
 const verifyAdmin = (req, res, next) => {
-    if (!req.user) {
-        return next(new Error('Something went wrong'))
-    } else if (req.user.role !== 'admin') {
+    if (req.user.role != 'admin') {
         res.status(403)
         return next(new Error('Not admin'))
     }
     next()
 }
 
-module.exports = { verifyUser, verifyAdmin }
+const verifyManager = (req, res, next) => {
+    if (req.user.role == 'manager' || req.user.role == 'admin') return next()
+    else {
+        res.status(403)
+        return next(new Error('Not authorized'))
+    }
+}
+
+
+module.exports = { verifyUser, verifyAdmin, verifyManager }

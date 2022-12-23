@@ -8,8 +8,13 @@ const reviewSchema = mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    reviewer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
-}, { timestamps: true })
+})
 // One-to-Few is most suitable for embedding!
 const bookSchema = mongoose.Schema({
     author: {
@@ -24,6 +29,10 @@ const bookSchema = mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, { timestamps: true })
 
