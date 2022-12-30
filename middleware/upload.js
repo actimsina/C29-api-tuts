@@ -1,5 +1,4 @@
 const multer = require('multer')
-const util = require('util')
 const maxSize = 2 * 1024 * 1024 // 2MB
 const path = require('path')
 
@@ -24,7 +23,7 @@ const upload = multer({
     storage: storage,
     fileFilter: imageFileFilter,
     limits: { fileSize: maxSize }
-}).single('file')
+}).single('profile')
 
 
 module.exports = upload

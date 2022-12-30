@@ -1,7 +1,6 @@
 const express = require('express')
 const Profile = require('../models/Profile')
-const { verifyUser } = require('../middleware/auth')
-const upload = require('../middleware/upload')
+const uploadProfile = require('../middleware/upload')
 
 const router = express.Router()
 
@@ -13,7 +12,7 @@ router.route('/')
                 res.json(profiles)
             }).catch(next)
     })
-    .post(upload, (req, res, next) => {
+    .post(uploadProfile, (req, res, next) => {
         console.log(req.file)
         console.log(req.body)
         if (req.file == undefined) return next(new Error('File is not uploaded.'))

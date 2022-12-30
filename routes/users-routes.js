@@ -49,7 +49,7 @@ router.post('/login', (req, res, next) => {
                     role: user.role
                 }
                 const token = jwt.sign(data,
-                    process.env.SECRET, { expiresIn: '1h' })
+                    process.env.SECRET, { expiresIn: '1d' })
                 res.json({ status: 'Login Success', token: token })
             })
         }).catch(next)
