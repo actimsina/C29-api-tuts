@@ -8,15 +8,16 @@ const categoryRouter = require('./routes/category-routes')
 const userRouter = require('./routes/users-routes')
 const profileRouter = require('./routes/profile-routes')
 const auth = require('./middleware/auth')
+const cors = require('cors')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3005
 
 mongoose.connect(process.env.DB_URI).then(() => {
     console.log('Connected to MongoDB')
 }).catch((err) => console.log(err))
 
 const app = express()
-
+app.use(cors())
 app.use((req, res, next) => {
     logger.log(`${req.method}\t${req.headers.origin}\t${req.path}`)
     console.log(`${req.method} ${req.path}`)
@@ -35,8 +36,8 @@ app.get('^/$|/index(.html)?', (req, res) => {
 
 app.use('/users', userRouter)
 app.use(auth.verifyUser)
-app.use('/profile', profileRouter)
 app.use('/books', booksRouter)
+app.use('/profile', profileRouter)
 app.use('/categories', categoryRouter)
 // Error handling middleware
 app.use((err, req, res, next) => {
