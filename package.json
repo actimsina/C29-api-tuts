@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "help": "npm install --save-dev cross-env",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "test": "NODE_ENV=test jest --runInBand --watchAll --coverage",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +22,12 @@
     "mongoose": "^6.7.3",
     "multer": "^1.4.5-lts.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.4.1",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

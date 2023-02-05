@@ -7,7 +7,7 @@ const { verifyUser, verifyManager, verifyAdmin } = require('../middleware/auth')
 
 router.route('/')
     .get(bookController.getAllBooks)
-    .post(verifyManager, bookController.createBook)
+    .post(bookController.createBook)
     .put((req, res) => res.status(501).json({ 'msg': 'Not implemented' }))
     .delete(verifyAdmin, bookController.deleteAllBooks)
 
