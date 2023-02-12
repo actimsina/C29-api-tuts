@@ -21,12 +21,12 @@ router.route('/:book_id/reviews')
     .get(reviewController.getAllReviews)
     .post(reviewController.createReview)
     .put((req, res) => res.status(501).json({ 'msg': 'Not implemented' }))
-    .delete(verifyAdmin, reviewController.deleteAllReviews)
+    .delete(reviewController.deleteAllReviews)
 
 router.route('/:book_id/reviews/:review_id')
     .get(reviewController.getReviewById)
     .post((req, res) => res.status(501).json({ 'msg': 'Not implemented' }))
     .put(reviewController.updateReviewById)
     .delete(reviewController.deleteReviewById)
-
+// wow this is fantastic!
 module.exports = router
